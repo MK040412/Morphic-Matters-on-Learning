@@ -46,7 +46,7 @@ PPO is a policy gradient method that prevents large policy updates through a cli
 
 <LaTeX formula={`L^{CLIP}(\\theta) = \\hat{\\mathbb{E}}_t \\left[ \\min \\left( \\frac{\\pi_\\theta(a_t|s_t)/\\pi_{\\theta_{old}}(a_t|s_t)} \\hat{A}_t, \\text{clip} \\left( \\frac{\\pi_\\theta(a_t|s_t)/\\pi_{\\theta_{old}}(a_t|s_t)}, 1 - \\epsilon, 1 + \\epsilon \\right) \\hat{A}_t \\right) \\right]`} />
 
-where <LaTeX formula="\\pi_\\theta" inline /> is the policy, <LaTeX formula="\\hat{A}_t" inline /> is the advantage estimate, and <LaTeX formula="\\epsilon" inline /> is the clipping parameter.
+where <LaTeX formula={`\\pi_\\theta`} inline /> is the policy, <LaTeX formula={`\\hat{A}_t`} inline /> is the advantage estimate, and <LaTeX formula={`\\epsilon`} inline /> is the clipping parameter.
 
 ### Generative Adversarial Imitation Learning (GAIL)
 
@@ -54,7 +54,7 @@ GAIL combines imitation learning with adversarial training, using a discriminato
 
 <LaTeX formula={`\\min_{\\pi} \\max_{D} \\mathbb{E}_{\\pi} [\\log D(s,a)] + \\mathbb{E}_{\\pi_E} [\\log (1 - D(s,a))]`} />
 
-where <LaTeX formula="\\pi" inline /> is the agent policy, <LaTeX formula="\\pi_E" inline /> is the expert policy, and <LaTeX formula="D" inline /> is the discriminator.
+where <LaTeX formula={`\\pi`} inline /> is the agent policy, <LaTeX formula={`\\pi_E`} inline /> is the expert policy, and <LaTeX formula={`D`} inline /> is the discriminator.
 
 ## Appendix
 
@@ -64,7 +64,7 @@ The full PPO algorithm involves collecting a batch of trajectories and then upda
 
 <LaTeX formula={`L_t^{PPO}(\\theta) = \\hat{\\mathbb{E}}_t [L_t^{CLIP}(\\theta) - c_1 L_t^{VF}(\\theta) + c_2 S[\\pi_\\theta](s_t)]`} />
 
-where <LaTeX formula="L_t^{VF}(\\theta) = (V_\\theta(s_t) - V_t^{targ})^2" inline /> is the value function loss, and <LaTeX formula="S" inline /> is an entropy bonus.
+where <LaTeX formula={`L_t^{VF}(\\theta) = (V_\\theta(s_t) - V_t^{targ})^2`} inline /> is the value function loss, and <LaTeX formula={`S`} inline /> is an entropy bonus.
 
 ### Detailed GAIL Algorithm
 
