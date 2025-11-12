@@ -3,9 +3,8 @@ layout: ../layouts/Layout.astro
 title: "Morphics matters on Learning"
 authors:
   - name: Kang Minkyu
-  - name: Kim Gihyeon
-  - name: Pyo Sanghoon
-theme: device
+  - name: Kim Kihyeon 
+  - name: Pyo Sanghun 
 favicon: favicon.svg
 description: "Project page for Morphics matters on Learning"
 ---
@@ -19,6 +18,10 @@ import Table from "../components/Table.astro";
 import { Comparison } from "../components/Comparison.tsx";
 import Video from "../components/Video.astro";
 import Links from "../components/Links.astro";
+import Figure from "../components/Figure.astro";
+import Picture from "../components/Picture.astro";
+import FrontRocket from "../assets/Front-rocket.png";
+import TopViewRocket from "../assets/Top view Rokect.png";
 
 <HighlightedSection>
 
@@ -56,18 +59,93 @@ GAIL combines imitation learning with adversarial training, using a discriminato
 
 where <LaTeX formula={`\\pi`} inline /> is the agent policy, <LaTeX formula={`\\pi_E`} inline /> is the expert policy, and <LaTeX formula={`D`} inline /> is the discriminator.
 
+## Tie Advanced: A Star Wars Inspired Morphology
+
+One of the special morphologies we explore is the "Tie Advanced," inspired by the iconic Star Wars spaceship. We adapted this design into a learning rocket form. Below, you can see the "Front-Rocket" and "Top View Rocket" which represent the transformed morphology we used for our experiments.
+
+<TwoColumns>
+  <Figure>
+    <Picture src={FrontRocket} alt="Front view of the rocket" />
+    Front view of our "Tie Advanced" inspired rocket.
+  </Figure>
+  <Figure>
+    <Picture src={TopViewRocket} alt="Top view of the rocket" />
+    Top view of our "Tie Advanced" inspired rocket.
+  </Figure>
+</TwoColumns>
+
 ## Appendix
 
 ### Detailed PPO Algorithm
 
-The full PPO algorithm involves collecting a batch of trajectories and then updating the policy for a fixed number of epochs. The objective function includes a value function loss and an entropy bonus:
+The complete objective function for Proximal Policy Optimization (PPO) is designed to ensure stable and reliable policy updates. It combines three key components: the clipped surrogate objective, a value function loss, and an entropy bonus.
 
+The final objective function is given by:
 <LaTeX formula={`L_t^{PPO}(\\theta) = \\hat{\\mathbb{E}}_t [L_t^{CLIP}(\\theta) - c_1 L_t^{VF}(\\theta) + c_2 S[\\pi_\\theta](s_t)]`} />
 
-where <LaTeX formula={`L_t^{VF}(\\theta) = (V_\\theta(s_t) - V_t^{targ})^2`} inline /> is the value function loss, and <LaTeX formula={`S`} inline /> is an entropy bonus.
+Let's break down each part of this equation.
+
+#### 1. Clipped Surrogate Objective (`L^{CLIP}`)
+
+This is the core of PPO's strategy to prevent destructively large policy updates.
+<LaTeX formula={`L^{CLIP}(\\theta) = \\hat{\\mathbb{E}}_t \\left[ \\min \\left( r_t(\\theta) \\hat{A}_t, \\text{clip}(r_t(\\theta), 1 - \\epsilon, 1 + \\epsilon) \\hat{A}_t \\right) \\right]`} />
+
+*   **Derivation and Meaning:**
+    *   <LaTeX formula={`r_t(\\theta) = \\frac{\\pi_\\theta(a_t|s_t)}{\\pi_{\\theta_{old}}(a_t|s_t)}`} inline />: This is the probability ratio between the new policy (<LaTeX formula={`\\pi_\\theta`} inline />) and the old policy (<LaTeX formula={`\\pi_{\\theta_{old}}`} inline />). It measures how much the policy has changed. If <LaTeX formula={`r_t(\\theta) > 1`} inline />, the action <LaTeX formula={`a_t`} inline /> is more likely under the new policy.
+    *   <LaTeX formula={`\\hat{A}_t`} inline />: This is the **Advantage Function**, which estimates how much better a given action <LaTeX formula={`a_t`} inline /> is compared to the average action at state <LaTeX formula={`s_t`} inline />. A positive advantage means the action was good.
+    *   <LaTeX formula={`\\text{clip}(r_t(\\theta), 1 - \\epsilon, 1 + \\epsilon) \\hat{A}_t`} inline />: This is the "clipped" version. The `clip` function constrains the probability ratio <LaTeX formula={`r_t(\\theta)`} inline /> to stay within the range <LaTeX formula={`[1 - \\epsilon, 1 + \\epsilon]`} inline />, where <LaTeX formula={`\\epsilon`} inline /> is a small hyperparameter (e.g., 0.2).
+    *   <LaTeX formula={`\\min(...)`} inline />: PPO takes the minimum of the normal objective and the clipped objective. This creates a pessimistic bound on the policy update, ensuring that each update step does not deviate too far from the previous policy, leading to more stable learning.
+
+#### 2. Value Function Loss (`L^{VF}`)
+
+To calculate the advantage <LaTeX formula={`\\hat{A}_t`} inline />, we need a value function <LaTeX formula={`V(s_t)`} inline /> that estimates the expected return from a state.
+<LaTeX formula={`L_t^{VF}(\\theta) = (V_\\theta(s_t) - V_t^{targ})^2`} />
+
+*   **Derivation and Meaning:**
+    *   <LaTeX formula={`V_\\theta(s_t)`} inline />: This is the value predicted by our value function network.
+    *   <LaTeX formula={`V_t^{targ}`} inline />: This is the "target" value, usually calculated from the actual rewards received.
+    *   **Implication:** This is a mean-squared error loss. By minimizing it, we train the value function to be an accurate predictor of future returns, which leads to a more accurate advantage estimate.
+
+#### 3. Entropy Bonus (`S`)
+
+To encourage exploration, an entropy bonus is added.
+<LaTeX formula={`S[\\pi_\\theta](s_t)`} />
+
+*   **Meaning and Implication:** Entropy measures the randomness of the policy. By adding entropy to the objective, we create an incentive for the policy to maintain a degree of randomness, helping the agent to continue exploring and discover better strategies.
+
+---
 
 ### Detailed GAIL Algorithm
 
-In GAIL, the generator (policy) and discriminator are updated iteratively. The generator is updated using a trust region policy optimization step, and the discriminator is updated by minimizing the binary cross-entropy loss.
+Generative Adversarial Imitation Learning (GAIL) reframes imitation learning as an adversarial game, inspired by Generative Adversarial Networks (GANs).
+
+The core objective function is a minimax game between the policy (the "Generator", <LaTeX formula={`\\pi`} inline />) and a "Discriminator" (<LaTeX formula={`D`} inline />):
+<LaTeX formula={`\\min_{\\pi} \\max_{D} V(D, \\pi) = \\mathbb{E}_{\\pi} [\\log D(s,a)] + \\mathbb{E}_{\\pi_E} [\\log (1 - D(s,a))]`} />
+
+Let's dissect this process.
+
+#### 1. The Adversarial Game
+
+*   **The Discriminator (`D`):**
+    *   **Goal:** To distinguish between state-action pairs `(s, a)` from the agent's policy (<LaTeX formula={`\\pi`} inline />) and those from the expert's demonstrations (<LaTeX formula={`\\pi_E`} inline />).
+    *   **Mechanism:** <LaTeX formula={`D(s, a)`} inline /> outputs the probability that the pair `(s, a)` came from the expert. It is trained to output <LaTeX formula={`D(s,a) \\to 1`} inline /> for expert data and <LaTeX formula={`D(s,a) \\to 0`} inline /> for agent data.
+
+*   **The Policy (`\\pi`, the Generator):**
+    *   **Goal:** To "fool" the discriminator by generating trajectories that are so similar to the expert's that the discriminator outputs <LaTeX formula={`D(s,a) \\to 1`} inline />.
+
+#### 2. The Learning Process
+
+The training alternates between updating the discriminator and the policy.
+
+*   **Step 1: Update the Discriminator**
+    1.  Sample trajectories from the agent policy <LaTeX formula={`\\pi`} inline /> and expert demonstrations <LaTeX formula={`\\pi_E`} inline />.
+    2.  Update the discriminator's parameters by performing gradient ascent on the objective.
+
+*   **Step 2: Update the Policy**
+    1.  The key insight of GAIL is to use the discriminator's output as a reward signal for the policy. The reward is defined as: <LaTeX formula={`r(s, a) = -\\log(1 - D(s, a))`} inline />.
+    2.  **Implication:** This reward is high when the discriminator is fooled.
+    3.  With this reward signal, any standard reinforcement learning algorithm (like PPO) can be used to update the policy <LaTeX formula={`\\pi`} inline /> to maximize the expected sum of these rewards.
+
+*   **Overall Implication:** GAIL is sample-efficient and robust because the policy learns to recover from its own mistakes, guided by the learned reward function from the discriminator, rather than just mimicking expert actions.
 
 ## Architecture
