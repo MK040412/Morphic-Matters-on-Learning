@@ -20,8 +20,8 @@ import Video from "../components/Video.astro";
 import Links from "../components/Links.astro";
 import Figure from "../components/Figure.astro";
 import Picture from "../components/Picture.astro";
-import FrontRocket from "../assets/Front-rocket.png";
-import TopViewRocket from "../assets/Top view Rokect.png";
+import FrontRocket from "../assets/front-rocket.png";
+import TopViewRocket from "../assets/top-view-rocket.png";
 
 <HighlightedSection>
 
@@ -85,7 +85,7 @@ The final objective function is given by:
 
 Let's break down each part of this equation.
 
-#### 1. Clipped Surrogate Objective (`L^{CLIP}`)
+#### 1. Clipped Surrogate Objective (<LaTeX formula={`L^{CLIP}`} inline />)
 
 This is the core of PPO's strategy to prevent destructively large policy updates.
 <LaTeX formula={`L^{CLIP}(\\theta) = \\hat{\\mathbb{E}}_t \\left[ \\min \\left( r_t(\\theta) \\hat{A}_t, \\text{clip}(r_t(\\theta), 1 - \\epsilon, 1 + \\epsilon) \\hat{A}_t \\right) \\right]`} />
@@ -96,7 +96,7 @@ This is the core of PPO's strategy to prevent destructively large policy updates
     *   <LaTeX formula={`\\text{clip}(r_t(\\theta), 1 - \\epsilon, 1 + \\epsilon) \\hat{A}_t`} inline />: This is the "clipped" version. The `clip` function constrains the probability ratio <LaTeX formula={`r_t(\\theta)`} inline /> to stay within the range <LaTeX formula={`[1 - \\epsilon, 1 + \\epsilon]`} inline />, where <LaTeX formula={`\\epsilon`} inline /> is a small hyperparameter (e.g., 0.2).
     *   <LaTeX formula={`\\min(...)`} inline />: PPO takes the minimum of the normal objective and the clipped objective. This creates a pessimistic bound on the policy update, ensuring that each update step does not deviate too far from the previous policy, leading to more stable learning.
 
-#### 2. Value Function Loss (`L^{VF}`)
+#### 2. Value Function Loss (<LaTeX formula={`L^{VF}`} inline />)
 
 To calculate the advantage <LaTeX formula={`\\hat{A}_t`} inline />, we need a value function <LaTeX formula={`V(s_t)`} inline /> that estimates the expected return from a state.
 <LaTeX formula={`L_t^{VF}(\\theta) = (V_\\theta(s_t) - V_t^{targ})^2`} />
