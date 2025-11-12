@@ -1,14 +1,13 @@
---- 
+---
 layout: ../layouts/Layout.astro
 title: "Morphics matters on Learning"
 authors:
   - name: Kang Minkyu
-  - name: Kim Kihyeon 
-  - name: Pyo Sanghun 
+  - name: Kim Kihyeon
+  - name: Pyo Sanghun
 favicon: favicon.svg
 description: "Project page for Morphics matters on Learning"
 ---
-
 
 import Authors from "../components/Authors.astro";
 import HighlightedSection from "../components/HighlightedSection.astro";
@@ -19,25 +18,25 @@ import { Comparison } from "../components/Comparison.tsx";
 import Video from "../components/Video.astro";
 import Links from "../components/Links.astro";
 import Figure from "../components/Figure.astro";
-import Picture from "../components/Picture.astro";
-import FrontRocket from "../assets/front-rocket.png";
-import TopViewRocket from "../assets/top-view-rocket.png";
+import FrontRocket from "../assets/front-rocket.jpeg"; // PNG 대신 JPEG로 변경
+import TopViewRocket from "../assets/top-view-rocket.jpeg"; // PNG 대신 JPEG로 변경
+import TieAdvanced from "../assets/tie-advanced.jpeg";
 
 <HighlightedSection>
 
 ## Abstract
 
-During the learning process of reinforcement learning and imitation reinforcement learning, 
-the agent learns to perform a task by interacting with the environment. However, the agent may not always learn the optimal policy. 
+During the learning process of reinforcement learning and imitation reinforcement learning,
+the agent learns to perform a task by interacting with the environment. However, the agent may not always learn the optimal policy.
 In this case, the agent may learn a suboptimal policy that is not as good as the optimal policy. We are going to introduce about
 the effect of morphics on learning in reinforcement learning and imitation reinforcement learning for space travle situation.
-And how morphics can help the agent to learn the optimal policy faster and better. 
+And how morphics can help the agent to learn the optimal policy faster and better.
 
 </HighlightedSection>
 
 ## Motivation
 
-The morphological characteristics of an agent significantly influence its learning capabilities in reinforcement learning environments. By carefully designing the agent's morphology, we can enhance its ability to explore the state space and learn optimal policies more efficiently. This is particularly crucial in complex environments like space travel scenarios, where optimal policy learning can be challenging due to the high-dimensional state and action spaces.
+The morphological characteristics of an agent significantly influence its learning capabilities in reinforcement learning environments. By carefully designing the agent\'s morphology, we can enhance its ability to explore the state space and learn optimal policies more efficiently. This is particularly crucial in complex environments like space travel scenarios, where optimal policy learning can be challenging due to the high-dimensional state and action spaces.
 
 ## Algorithm
 
@@ -55,7 +54,7 @@ where <LaTeX formula={`\\pi_\\theta`} inline /> is the policy, <LaTeX formula={`
 
 GAIL combines imitation learning with adversarial training, using a discriminator to distinguish between expert and agent behaviors. The objective function is:
 
-<LaTeX formula={`\\min_{\\pi} \\max_{D} \\mathbb{E}_{\\pi} [\\log D(s,a)] + \\mathbb{E}_{\\pi_E} [\\log (1 - D(s,a))]`} />
+<LaTeX formula={`\\min_{\\pi} \\max_{D} V(D, \\pi) = \\mathbb{E}_{\\pi} [\\log D(s,a)] + \\mathbb{E}_{\\pi_E} [\\log (1 - D(s,a))]`} />
 
 where <LaTeX formula={`\\pi`} inline /> is the agent policy, <LaTeX formula={`\\pi_E`} inline /> is the expert policy, and <LaTeX formula={`D`} inline /> is the discriminator.
 
@@ -63,16 +62,11 @@ where <LaTeX formula={`\\pi`} inline /> is the agent policy, <LaTeX formula={`\\
 
 One of the special morphologies we explore is the "Tie Advanced," inspired by the iconic Star Wars spaceship. We adapted this design into a learning rocket form. Below, you can see the "Front-Rocket" and "Top View Rocket" which represent the transformed morphology we used for our experiments.
 
-<TwoColumns>
-  <Figure>
-    <Picture src={FrontRocket} alt="Front view of the rocket" />
-    Front view of our "Tie Advanced" inspired rocket.
-  </Figure>
-  <Figure>
-    <Picture src={TopViewRocket} alt="Top view of the rocket" />
-    Top view of our "Tie Advanced" inspired rocket.
-  </Figure>
-</TwoColumns>
+<Figure items={[
+  { src: TieAdvanced.src, alt: "Tie Advanced", caption: "This is the Tie Advanced image." },
+  { src: FrontRocket.src, alt: "Front view of the rocket", caption: "Front view of our \"Tie Advanced\" inspired rocket." },
+  { src: TopViewRocket.src, alt: "Top view of our \"Tie Advanced\" inspired rocket.", caption: "Top view of our \"Tie Advanced\" inspired rocket." }
+]} />
 
 ## Appendix
 
@@ -83,11 +77,11 @@ The complete objective function for Proximal Policy Optimization (PPO) is design
 The final objective function is given by:
 <LaTeX formula={`L_t^{PPO}(\\theta) = \\hat{\\mathbb{E}}_t [L_t^{CLIP}(\\theta) - c_1 L_t^{VF}(\\theta) + c_2 S[\\pi_\\theta](s_t)]`} />
 
-Let's break down each part of this equation.
+Let\'s break down each part of this equation.
 
 #### 1. Clipped Surrogate Objective (<LaTeX formula={`L^{CLIP}`} inline />)
 
-This is the core of PPO's strategy to prevent destructively large policy updates.
+This is the core of PPO\'s strategy to prevent destructively large policy updates.
 <LaTeX formula={`L^{CLIP}(\\theta) = \\hat{\\mathbb{E}}_t \\left[ \\min \\left( r_t(\\theta) \\hat{A}_t, \\text{clip}(r_t(\\theta), 1 - \\epsilon, 1 + \\epsilon) \\hat{A}_t \\right) \\right]`} />
 
 *   **Derivation and Meaning:**
@@ -122,16 +116,16 @@ Generative Adversarial Imitation Learning (GAIL) reframes imitation learning as 
 The core objective function is a minimax game between the policy (the "Generator", <LaTeX formula={`\\pi`} inline />) and a "Discriminator" (<LaTeX formula={`D`} inline />):
 <LaTeX formula={`\\min_{\\pi} \\max_{D} V(D, \\pi) = \\mathbb{E}_{\\pi} [\\log D(s,a)] + \\mathbb{E}_{\\pi_E} [\\log (1 - D(s,a))]`} />
 
-Let's dissect this process.
+Let\'s dissect this process.
 
 #### 1. The Adversarial Game
 
 *   **The Discriminator (`D`):**
-    *   **Goal:** To distinguish between state-action pairs `(s, a)` from the agent's policy (<LaTeX formula={`\\pi`} inline />) and those from the expert's demonstrations (<LaTeX formula={`\\pi_E`} inline />).
+    *   **Goal:** To distinguish between state-action pairs `(s, a)` from the agent\'s policy (<LaTeX formula={`\\pi`} inline />) and those from the expert\'s demonstrations (<LaTeX formula={`\\pi_E`} inline />).
     *   **Mechanism:** <LaTeX formula={`D(s, a)`} inline /> outputs the probability that the pair `(s, a)` came from the expert. It is trained to output <LaTeX formula={`D(s,a) \\to 1`} inline /> for expert data and <LaTeX formula={`D(s,a) \\to 0`} inline /> for agent data.
 
-*   **The Policy (`\\pi`, the Generator):**
-    *   **Goal:** To "fool" the discriminator by generating trajectories that are so similar to the expert's that the discriminator outputs <LaTeX formula={`D(s,a) \\to 1`} inline />.
+*   **The Policy (<LaTeX formula={`\\pi`} inline />, the Generator):**
+    *   **Goal:** To "fool" the discriminator by generating trajectories that are so similar to the expert\'s that the discriminator outputs <LaTeX formula={`D(s,a) \\to 1`} inline />.
 
 #### 2. The Learning Process
 
@@ -139,10 +133,10 @@ The training alternates between updating the discriminator and the policy.
 
 *   **Step 1: Update the Discriminator**
     1.  Sample trajectories from the agent policy <LaTeX formula={`\\pi`} inline /> and expert demonstrations <LaTeX formula={`\\pi_E`} inline />.
-    2.  Update the discriminator's parameters by performing gradient ascent on the objective.
+    2.  Update the discriminator\'s parameters by performing gradient ascent on the objective.
 
 *   **Step 2: Update the Policy**
-    1.  The key insight of GAIL is to use the discriminator's output as a reward signal for the policy. The reward is defined as: <LaTeX formula={`r(s, a) = -\\log(1 - D(s, a))`} inline />.
+    1.  The key insight of GAIL is to use the discriminator\'s output as a reward signal for the policy. The reward is defined as: <LaTeX formula={`r(s, a) = -\\log(1 - D(s, a))`} inline />.
     2.  **Implication:** This reward is high when the discriminator is fooled.
     3.  With this reward signal, any standard reinforcement learning algorithm (like PPO) can be used to update the policy <LaTeX formula={`\\pi`} inline /> to maximize the expected sum of these rewards.
 

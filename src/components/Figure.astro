@@ -1,12 +1,26 @@
 ---
+interface Props {
+  items: {
+    src: string;
+    alt: string;
+    caption: string;
+  }[];
+}
 
+const { items } = Astro.props;
 ---
 
-<figure>
-  <div class="flex w-full justify-center">
-    <slot name="figure" />
+<figure class="flex flex-col items-center">
+  <div class="flex w-full justify-center gap-4">
+    {items.map((item) => (
+      <img src={item.src} alt={item.alt} class="flex-1" />
+    ))}
   </div>
-  <figcaption class="text-center">
-    <slot name="caption" />
-  </figcaption>
+  <div class="flex w-full justify-center gap-4 mt-2">
+    {items.map((item) => (
+      <figcaption class="text-center flex-1">
+        {item.caption}
+      </figcaption>
+    ))}
+  </div>
 </figure>
