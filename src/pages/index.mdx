@@ -1,0 +1,73 @@
+--- 
+layout: ../layouts/Layout.astro
+title: "Morphics matters on Learning"
+authors:
+  - name: Kang Minkyu
+  - name: Kim Gihyeon
+  - name: Pyo Sanghoon
+theme: device
+favicon: favicon.svg
+description: "Project page for Morphics matters on Learning"
+---
+
+
+import Authors from "../components/Authors.astro";
+import HighlightedSection from "../components/HighlightedSection.astro";
+import TwoColumns from "../components/TwoColumns.astro";
+import LaTeX from "../components/LaTeX.astro";
+import Table from "../components/Table.astro";
+import { Comparison } from "../components/Comparison.tsx";
+import Video from "../components/Video.astro";
+import Links from "../components/Links.astro";
+
+<HighlightedSection>
+
+## Abstract
+
+During the learning process of reinforcement learning and imitation reinforcement learning, 
+the agent learns to perform a task by interacting with the environment. However, the agent may not always learn the optimal policy. 
+In this case, the agent may learn a suboptimal policy that is not as good as the optimal policy. We are going to introduce about
+the effect of morphics on learning in reinforcement learning and imitation reinforcement learning for space travle situation.
+And how morphics can help the agent to learn the optimal policy faster and better. 
+
+</HighlightedSection>
+
+## Motivation
+
+The morphological characteristics of an agent significantly influence its learning capabilities in reinforcement learning environments. By carefully designing the agent's morphology, we can enhance its ability to explore the state space and learn optimal policies more efficiently. This is particularly crucial in complex environments like space travel scenarios, where optimal policy learning can be challenging due to the high-dimensional state and action spaces.
+
+## Algorithm
+
+We utilize two primary algorithms for our reinforcement learning framework: Proximal Policy Optimization (PPO) and Generative Adversarial Imitation Learning (GAIL).
+
+### Proximal Policy Optimization (PPO)
+
+PPO is a policy gradient method that prevents large policy updates through a clipped objective function. The key equation for PPO is:
+
+<LaTeX formula={`L^{CLIP}(\\theta) = \\hat{\\mathbb{E}}_t \\left[ \\min \\left( \\frac{\\pi_\\theta(a_t|s_t)/\\pi_{\\theta_{old}}(a_t|s_t)} \\hat{A}_t, \\text{clip} \\left( \\frac{\\pi_\\theta(a_t|s_t)/\\pi_{\\theta_{old}}(a_t|s_t)}, 1 - \\epsilon, 1 + \\epsilon \\right) \\hat{A}_t \\right) \\right]`} />
+
+where <LaTeX formula="\\pi_\\theta" inline /> is the policy, <LaTeX formula="\\hat{A}_t" inline /> is the advantage estimate, and <LaTeX formula="\\epsilon" inline /> is the clipping parameter.
+
+### Generative Adversarial Imitation Learning (GAIL)
+
+GAIL combines imitation learning with adversarial training, using a discriminator to distinguish between expert and agent behaviors. The objective function is:
+
+<LaTeX formula={`\\min_{\\pi} \\max_{D} \\mathbb{E}_{\\pi} [\\log D(s,a)] + \\mathbb{E}_{\\pi_E} [\\log (1 - D(s,a))]`} />
+
+where <LaTeX formula="\\pi" inline /> is the agent policy, <LaTeX formula="\\pi_E" inline /> is the expert policy, and <LaTeX formula="D" inline /> is the discriminator.
+
+## Appendix
+
+### Detailed PPO Algorithm
+
+The full PPO algorithm involves collecting a batch of trajectories and then updating the policy for a fixed number of epochs. The objective function includes a value function loss and an entropy bonus:
+
+<LaTeX formula={`L_t^{PPO}(\\theta) = \\hat{\\mathbb{E}}_t [L_t^{CLIP}(\\theta) - c_1 L_t^{VF}(\\theta) + c_2 S[\\pi_\\theta](s_t)]`} />
+
+where <LaTeX formula="L_t^{VF}(\\theta) = (V_\\theta(s_t) - V_t^{targ})^2" inline /> is the value function loss, and <LaTeX formula="S" inline /> is an entropy bonus.
+
+### Detailed GAIL Algorithm
+
+In GAIL, the generator (policy) and discriminator are updated iteratively. The generator is updated using a trust region policy optimization step, and the discriminator is updated by minimizing the binary cross-entropy loss.
+
+## Architecture
