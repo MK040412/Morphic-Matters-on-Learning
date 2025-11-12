@@ -21,6 +21,14 @@ import Figure from "../components/Figure.astro";
 import FrontRocket from "../assets/front-rocket.jpeg"; // PNG 대신 JPEG로 변경
 import TopViewRocket from "../assets/top-view-rocket.jpeg"; // PNG 대신 JPEG로 변경
 import TieAdvanced from "../assets/tie-advanced.jpeg";
+import NinjaBoy from "../assets/ninja_boy.gif"; // GIF 파일 임포트
+
+<Figure items={[
+  {
+    src: NinjaBoy.src,
+    alt: "Ninja Boy GIF",
+  },
+]} />
 
 <HighlightedSection>
 
@@ -60,10 +68,14 @@ where <LaTeX formula={`\\pi`} inline /> is the agent policy, <LaTeX formula={`\\
 
 ## Tie Advanced: A Star Wars Inspired Morphology
 
+<figure class="flex flex-col items-center my-4">
+  <img src={TieAdvanced.src} alt="Tie Advanced" class="max-w-md h-auto rounded-lg shadow-md" />
+  <figcaption class="text-center mt-2 text-sm text-gray-600">This is the Tie Advanced image.</figcaption>
+</figure>
+
 One of the special morphologies we explore is the "Tie Advanced," inspired by the iconic Star Wars spaceship. We adapted this design into a learning rocket form. Below, you can see the "Front-Rocket" and "Top View Rocket" which represent the transformed morphology we used for our experiments.
 
 <Figure items={[
-  { src: TieAdvanced.src, alt: "Tie Advanced", caption: "This is the Tie Advanced image." },
   { src: FrontRocket.src, alt: "Front view of the rocket", caption: "Front view of our \"Tie Advanced\" inspired rocket." },
   { src: TopViewRocket.src, alt: "Top view of our \"Tie Advanced\" inspired rocket.", caption: "Top view of our \"Tie Advanced\" inspired rocket." }
 ]} />
@@ -77,11 +89,11 @@ The complete objective function for Proximal Policy Optimization (PPO) is design
 The final objective function is given by:
 <LaTeX formula={`L_t^{PPO}(\\theta) = \\hat{\\mathbb{E}}_t [L_t^{CLIP}(\\theta) - c_1 L_t^{VF}(\\theta) + c_2 S[\\pi_\\theta](s_t)]`} />
 
-Let\'s break down each part of this equation.
+Let's break down each part of this equation.
 
 #### 1. Clipped Surrogate Objective (<LaTeX formula={`L^{CLIP}`} inline />)
 
-This is the core of PPO\'s strategy to prevent destructively large policy updates.
+This is the core of PPO's strategy to prevent destructively large policy updates.
 <LaTeX formula={`L^{CLIP}(\\theta) = \\hat{\\mathbb{E}}_t \\left[ \\min \\left( r_t(\\theta) \\hat{A}_t, \\text{clip}(r_t(\\theta), 1 - \\epsilon, 1 + \\epsilon) \\hat{A}_t \\right) \\right]`} />
 
 *   **Derivation and Meaning:**
@@ -107,6 +119,25 @@ To encourage exploration, an entropy bonus is added.
 
 *   **Meaning and Implication:** Entropy measures the randomness of the policy. By adding entropy to the objective, we create an incentive for the policy to maintain a degree of randomness, helping the agent to continue exploring and discover better strategies.
 
+#### 4. PPO Learning Process (Pseudocode)
+
+<div style={{background: '#f7f7f7', border: '1px solid #ddd', padding: '15px', borderRadius: '5px', fontFamily: 'monospace', whiteSpace: 'pre-wrap', lineHeight: '1.5', fontSize: '14px'}}>
+    <strong>Algorithm 1:</strong> Proximal Policy Optimization (PPO)
+    <hr style={{margin: '10px 0'}} />
+    1. Initialize policy network <LaTeX formula="\pi_\theta" inline /> and value network <LaTeX formula="V_\phi" inline /><br/>
+    2. <strong>for</strong> iteration = 1, 2, ... <strong>do</strong><br/>
+    3. &nbsp;&nbsp;&nbsp;&nbsp;Collect set of trajectories <LaTeX formula="\mathcal{D}_k = \{\tau_i\}" inline /> by running policy <LaTeX formula="\pi_k = \pi_{\theta_{\text{old}}}" inline /><br/>
+    4. &nbsp;&nbsp;&nbsp;&nbsp;Compute rewards-to-go <LaTeX formula="\hat{R}_t" inline /><br/>
+    5. &nbsp;&nbsp;&nbsp;&nbsp;Compute advantage estimates <LaTeX formula="\hat{A}_t" inline /> based on the current value function <LaTeX formula="V_{\phi_k}" inline /><br/>
+    6. &nbsp;&nbsp;&nbsp;&nbsp;<strong>for</strong> epoch = 1, 2, ... K <strong>do</strong><br/>
+    7. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update policy by maximizing the PPO-Clip objective:<br/>
+    <LaTeX formula={`\\theta_{k+1} \\leftarrow \\arg\\max_\\theta \\frac{1}{|\\mathcal{D}_k|T} \\sum_{\\tau \\in \\mathcal{D}_k} \\sum_{t=0}^{T} \\min\\left( \\frac{\\pi_\\theta(a_t|s_t)}{\\pi_{\\theta_k}(a_t|s_t)} \\hat{A}_t, \\text{clip}\\left(\\frac{\pi_\\theta(a_t|s_t)/\\pi_{\\theta_k}(a_t|s_t)}, 1-\\epsilon, 1+\\epsilon\\right) \\hat{A}_t \\right)`} />
+    8. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update value function by minimizing mean-squared error:<br/>
+    <LaTeX formula={`\\phi_{k+1} \\leftarrow \\arg\\min_\\phi \\frac{1}{|\\mathcal{D}_k|T} \\sum_{\\tau \\in \\mathcal{D}_k} \\sum_{t=0}^{T} (V_\\phi(s_t) - \\hat{R}_t)^2`} />
+    9. &nbsp;&nbsp;&nbsp;&nbsp;<strong>end for</strong><br/>
+    10. <strong>end for</strong>
+</div>
+
 ---
 
 ### Detailed GAIL Algorithm
@@ -116,30 +147,29 @@ Generative Adversarial Imitation Learning (GAIL) reframes imitation learning as 
 The core objective function is a minimax game between the policy (the "Generator", <LaTeX formula={`\\pi`} inline />) and a "Discriminator" (<LaTeX formula={`D`} inline />):
 <LaTeX formula={`\\min_{\\pi} \\max_{D} V(D, \\pi) = \\mathbb{E}_{\\pi} [\\log D(s,a)] + \\mathbb{E}_{\\pi_E} [\\log (1 - D(s,a))]`} />
 
-Let\'s dissect this process.
+Let's dissect this process.
 
 #### 1. The Adversarial Game
 
 *   **The Discriminator (`D`):**
-    *   **Goal:** To distinguish between state-action pairs `(s, a)` from the agent\'s policy (<LaTeX formula={`\\pi`} inline />) and those from the expert\'s demonstrations (<LaTeX formula={`\\pi_E`} inline />).
+    *   **Goal:** To distinguish between state-action pairs `(s, a)` from the agent's policy (<LaTeX formula={`\\pi`} inline />) and those from the expert's demonstrations (<LaTeX formula={`\\pi_E`} inline />).
     *   **Mechanism:** <LaTeX formula={`D(s, a)`} inline /> outputs the probability that the pair `(s, a)` came from the expert. It is trained to output <LaTeX formula={`D(s,a) \\to 1`} inline /> for expert data and <LaTeX formula={`D(s,a) \\to 0`} inline /> for agent data.
 
 *   **The Policy (<LaTeX formula={`\\pi`} inline />, the Generator):**
-    *   **Goal:** To "fool" the discriminator by generating trajectories that are so similar to the expert\'s that the discriminator outputs <LaTeX formula={`D(s,a) \\to 1`} inline />.
+    *   **Goal:** To "fool" the discriminator by generating trajectories that are so similar to the expert's that the discriminator outputs <LaTeX formula={`D(s,a) \\to 1`} inline />.
 
-#### 2. The Learning Process
+#### 2. GAIL Learning Process (Pseudocode)
 
-The training alternates between updating the discriminator and the policy.
-
-*   **Step 1: Update the Discriminator**
-    1.  Sample trajectories from the agent policy <LaTeX formula={`\\pi`} inline /> and expert demonstrations <LaTeX formula={`\\pi_E`} inline />.
-    2.  Update the discriminator\'s parameters by performing gradient ascent on the objective.
-
-*   **Step 2: Update the Policy**
-    1.  The key insight of GAIL is to use the discriminator\'s output as a reward signal for the policy. The reward is defined as: <LaTeX formula={`r(s, a) = -\\log(1 - D(s, a))`} inline />.
-    2.  **Implication:** This reward is high when the discriminator is fooled.
-    3.  With this reward signal, any standard reinforcement learning algorithm (like PPO) can be used to update the policy <LaTeX formula={`\\pi`} inline /> to maximize the expected sum of these rewards.
-
-*   **Overall Implication:** GAIL is sample-efficient and robust because the policy learns to recover from its own mistakes, guided by the learned reward function from the discriminator, rather than just mimicking expert actions.
-
-## Architecture
+<div style={{background: '#f7f7f7', border: '1px solid #ddd', padding: '15px', borderRadius: '5px', fontFamily: 'monospace', whiteSpace: 'pre-wrap', lineHeight: '1.5', fontSize: '14px'}}>
+    <strong>Algorithm 2:</strong> Generative Adversarial Imitation Learning (GAIL)
+    <hr style={{margin: '10px 0'}} />
+    1. <strong>Input:</strong> Expert trajectories <LaTeX formula="\tau_E" inline /><br/>
+    2. Initialize policy <LaTeX formula="\pi_\theta" inline /> and discriminator <LaTeX formula="D_\omega" inline /><br/>
+    3. <strong>for</strong> iteration = 1, 2, ... <strong>do</strong><br/>
+    4. &nbsp;&nbsp;&nbsp;&nbsp;Sample trajectories <LaTeX formula="\tau_\pi \sim \pi_\theta(a|s)" inline /><br/>
+    5. &nbsp;&nbsp;&nbsp;&nbsp;Update discriminator <LaTeX formula="D_\omega" inline /> by ascending the gradient of:<br/>
+    <LaTeX formula={`\\hat{\\mathbb{E}}_{\\tau_\\pi}[\\log(D_\\omega(s,a))] + \\hat{\\mathbb{E}}_{\\tau_E}[\\log(1 - D_\\omega(s,a))]`} />
+    6. &nbsp;&nbsp;&nbsp;&nbsp;Define reward for the policy as <LaTeX formula="r(s,a) = -\log(1 - D_\omega(s,a))" inline /><br/>
+    7. &nbsp;&nbsp;&nbsp;&nbsp;Update policy <LaTeX formula="\pi_\theta" inline /> using RL (e.g., PPO) with reward function <LaTeX formula="r(s,a)" inline /><br/>
+    8. <strong>end for</strong>
+</div>

@@ -3,7 +3,7 @@ interface Props {
   items: {
     src: string;
     alt: string;
-    caption: string;
+    caption?: string;
   }[];
 }
 
@@ -11,16 +11,16 @@ const { items } = Astro.props;
 ---
 
 <figure class="flex flex-col items-center">
-  <div class="flex w-full justify-center gap-4">
+  <div class="flex w-full justify-center items-start gap-4">
     {items.map((item) => (
-      <img src={item.src} alt={item.alt} class="flex-1" />
-    ))}
-  </div>
-  <div class="flex w-full justify-center gap-4 mt-2">
-    {items.map((item) => (
-      <figcaption class="text-center flex-1">
-        {item.caption}
-      </figcaption>
+      <div class="flex flex-col items-center">
+        <img src={item.src} alt={item.alt} class="max-w-full h-auto" />
+        {item.caption && (
+          <figcaption class="text-center mt-2">
+            {item.caption}
+          </figcaption>
+        )}
+      </div>
     ))}
   </div>
 </figure>
