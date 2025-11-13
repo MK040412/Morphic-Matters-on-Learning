@@ -134,8 +134,8 @@ To encourage exploration, an entropy bonus is added.
     <LaTeX formula={`\\theta_{k+1} \\leftarrow \\arg\\max_\\theta \\frac{1}{|\\mathcal{D}_k|T} \\sum_{\\tau \\in \\mathcal{D}_k} \\sum_{t=0}^{T} \\min\\left( \\frac{\\pi_\\theta(a_t|s_t)}{\\pi_{\\theta_k}(a_t|s_t)} \\hat{A}_t, \\text{clip}\\left(\\frac{\pi_\\theta(a_t|s_t)/\\pi_{\\theta_k}(a_t|s_t)}, 1-\\epsilon, 1+\\epsilon\\right) \\hat{A}_t \\right)`} />
     8. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Update value function by minimizing mean-squared error:<br/>
     <LaTeX formula={`\\phi_{k+1} \\leftarrow \\arg\\min_\\phi \\frac{1}{|\\mathcal{D}_k|T} \\sum_{\\tau \\in \\mathcal{D}_k} \\sum_{t=0}^{T} (V_\\phi(s_t) - \\hat{R}_t)^2`} />
-    9. &nbsp;&nbsp;&nbsp;&nbsp;<strong>end for</strong><br/>
-    10. <strong>end for</strong>
+    9. &nbsp;&nbsp;&nbsp;&nbsp;<strong>end for</strong> <br/>
+    10.  &nbsp; <strong>end for</strong>
 </div>
 
 ---
@@ -171,5 +171,5 @@ Let's dissect this process.
     <LaTeX formula={`\\hat{\\mathbb{E}}_{\\tau_\\pi}[\\log(D_\\omega(s,a))] + \\hat{\\mathbb{E}}_{\\tau_E}[\\log(1 - D_\\omega(s,a))]`} />
     6. &nbsp;&nbsp;&nbsp;&nbsp;Define reward for the policy as <LaTeX formula="r(s,a) = -\log(1 - D_\omega(s,a))" inline /><br/>
     7. &nbsp;&nbsp;&nbsp;&nbsp;Update policy <LaTeX formula="\pi_\theta" inline /> using RL (e.g., PPO) with reward function <LaTeX formula="r(s,a)" inline /><br/>
-    8. <strong>end for</strong>
+    8. &nbsp; <strong>end for</strong>
 </div>
